@@ -78,7 +78,7 @@ bot.on("message", (message) => {
 
 //prefix set command, courtesy of Adelyn
 
-    if(message.content.startsWith(config.prefix + "prefixset" || config.prefixMention + "prefixset")) {
+    if(message.content.startsWith(config.prefix + "prefixset")) {
         if(message.author.id !== config.ownerID) {
             return message.channel.send("You don't have the permissions to do that"),
             console.log("'PrefixSet' was executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ") but failed to complete");
@@ -105,7 +105,7 @@ bot.on("message", (message) => {
         if (!amount) return message.channel.send('Must specify an amount to delete!');
         if (!amount && !user) return;
         message.channel.fetchMessages({
-            limit: amount,
+            limit: amount + 1,
         }).then((messages) => {
             if (user) {
                 let filterBy = user ? user.id : bot.user.id;
