@@ -270,14 +270,14 @@ bot.on('guildMemberRemove', member => {
 
 //log message when bot is added to a new guild
 bot.on('guildCreate', guild => {
-    let logChannel = bot.channels.get('387978188040437762');
+    let logChannel = bot.channels.get(config.logInTestGuild);
     logChannel.send("**DotBot** has been added to the guild **" + guild.name + "**");
     console.log('DotBot has been added to the guild ' + guild.name);
 });
 
 //log message when bot is removed from a guild
 bot.on('guildDelete', guild => {
-    let logChannel = bot.channels.get('387978188040437762');
+    let logChannel = bot.channels.get(config.logInTestGuild);
     logChannel.send("**DotBot** has been removed from the guild **" + guild.name + "**");
     console.log('DotBot has been removed from the guild ' + guild.name);
 });
