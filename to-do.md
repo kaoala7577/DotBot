@@ -6,7 +6,7 @@
 
 # low priority
 
-* Unban
+* Unban (unsure if i'm gonna make this)
 * Nickname change log
 * Username change log
 * Delete message log
