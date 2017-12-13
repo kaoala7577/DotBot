@@ -1,4 +1,4 @@
-//variables
+//this shit
 
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -18,10 +18,10 @@ info
 ping
 prefixcheck
 prefixset
-purge
-warn
-kick
-ban
+purge - idk if working
+warn - idk if working
+kick - idk if working
+ban - idk if working
 userinfo UNFINISHED*/
 
 //beginning
@@ -31,7 +31,7 @@ bot.on("message", (message) => {
     
 //help command (dm)
     
-    if(message.content.startsWith(config.prefix + "help" || config.prefixMention + "help")) {
+    if(message.content.startsWith(config.prefix + "help")) {
         message.channel.send("I've DMed you the help page!");
         message.author.send("```dsconfig\nHow To Read```\n`<>` = you **must** add this argument\n`[]` = this argument is **optional**\n`|` = do this **or** this (`a|b = a or b`)\n\n```dsconfig\nCommands```\n**Ping:**\nShows the current ping\n`" + config.prefix + "ping`\n\n**Prefix Check:**\nShows the command prefix in case you forget\n`@DotBot#2919 prefixcheck`\n\n**Info:**\nShows the bot info\n`" + config.prefix + "info`\n\n**Prefix Set:**\nSets a new prefix. Must be Bot Owner\n`" + config.prefix + "prefixset <new prefix>`\n\n**Purge:**\nBulk deletes messages. Can be used with or without a mention. Must have 'mod' role\n`" + config.prefix + "purge <amount> [user]`\n\n**Warn:**\nWarn a member about their actions. Must have 'staff' role\n`" + config.prefix + "warn <user> <reason>`\n\n**Kick:**\nKicks a user. Must have 'mod' role\n`" + config.prefix + "kick <user> [reason]`\n\n**Ban:**\nBans a member. Must have 'admin' role\n`" + config.prefix + "ban <user> [reason]`\n\n**Please note that 'PrefixCheck' doesn't work with the command prefix- that would defeat the point**");
         console.log("'Help' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
@@ -180,7 +180,7 @@ bot.on("message", (message) => {
         console.log("'Ban' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + "). They banned " + user + " for the following: " + reason);
       }
 
-      //userinfo command - unfinished (verified)
+      //userinfo command - unfinished (verified + joinedAt)
 
       if(message.content.startsWith(config.prefix + "userinfo") || message.content.startsWith(config.prefix + "ui")) {
 
@@ -196,10 +196,10 @@ bot.on("message", (message) => {
         .addField("Username", usera.username, true)
         .addField("Status", usera.presence.status, true)
         .addField("Game", gameName, true)
-        .addField("Joined Server", message.mentions.users.joinedAt, true)
+        .addField("Joined Server", message.mentions.users.joinedAt, true) //undefined
         .addField("Created", usera.createdAt, true)
         .addField("Bot", usera.bot, true)
-        .addField("Verified", value, true)
+        .addField("Verified", value, true) //always false
         .setTimestamp()
         .setColor(0x0f7fa6)
         .setThumbnail(usera.avatarURL);
@@ -208,7 +208,7 @@ bot.on("message", (message) => {
         console.log("'UI' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
     }
 
-    //server info
+    //server info (idek why i kept this here)
 
     /*if(message.content.startsWith(config.prefix + "serverinfo") || message.content.startsWith(config.prefix + "si")) {
 
