@@ -74,7 +74,7 @@ bot.on("message", (message) => {
         console.log("'Prefixcheck' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
     }
 
-        //BOT OWNER ONLY FROM HERE ON
+        //ROLE ONLY NOW
 
 //prefix set command, courtesy of Adelyn
 
