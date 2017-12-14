@@ -1,8 +1,6 @@
 # high priority
 
 * ServerInfo
-* UserInfo (in the works)
-* Fix commands (purge, warn, kick, ban)
 
 # low priority
 
@@ -12,6 +10,7 @@
 * Delete message log
 * Role update log
 * Mutes + timed mutes
+* Emoji log
 
 # very low priority + easy
 
