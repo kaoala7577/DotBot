@@ -34,7 +34,7 @@ bot.on("message", (message) => {
     if(message.content.startsWith(config.prefix + "help")) {
         message.channel.send("I've DMed you the help page!");
         message.author.send("```dsconfig\nHow To Read```\n`<>` = you **must** add this argument\n`[]` = this argument is **optional**\n`|` = do this **or** this (`a|b = a or b`)\n\n```dsconfig\nCommands```\n**Ping:**\nShows the current ping\n`" + config.prefix + "ping`\n\n**Prefix Check:**\nShows the command prefix in case you forget\n`@DotBot#2919 prefixcheck`\n\n**Info:**\nShows the bot info\n`" + config.prefix + "info`\n\n**Prefix Set:**\nSets a new prefix. Must be Bot Owner\n`" + config.prefix + "prefixset <new prefix>`\n\n**Purge:**\nBulk deletes messages. Can be used with or without a mention. Must have 'mod' role\n`" + config.prefix + "purge <amount> [user]`\n\n**Warn:**\nWarn a member about their actions. Must have 'staff' role\n`" + config.prefix + "warn <user> <reason>`\n\n**Kick:**\nKicks a user. Must have 'mod' role\n`" + config.prefix + "kick <user> [reason]`\n\n**Ban:**\nBans a member. Must have 'admin' role\n`" + config.prefix + "ban <user> [reason]`\n\n**Please note that 'PrefixCheck' doesn't work with the command prefix- that would defeat the point**");
-        console.log("'Help' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
+        console.log("'Help' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
             //make sure to edit this when you add a new command
     }
 
@@ -55,7 +55,7 @@ bot.on("message", (message) => {
 
         message.channel.send({embed});
 
-        console.log("'Info' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
+        console.log("'Info' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
     }
 
 //ping command
@@ -63,7 +63,7 @@ bot.on("message", (message) => {
     if(message.content.startsWith(config.prefix + "ping")) {
         message.channel.send("Pong! Your ping is `").then(rsp => {
             rsp.edit("Pong! Your ping is `" + (rsp.createdTimestamp - message.createdTimestamp) + " ms`");
-            console.log("'Ping' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
+            console.log("'Ping' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
         });
     }
 
@@ -71,7 +71,7 @@ bot.on("message", (message) => {
 
     if(message.content.startsWith(config.prefixMention + "prefixcheck")) {
         message.channel.send("The prefix is `" + (config.prefix) + "`. If you have the correct permissions and you would like to change it, do `" + config.prefix + "prefixset <new prefix>`");
-        console.log("'Prefixcheck' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
+        console.log("'Prefixcheck' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
     }
 
         //ROLE ONLY NOW
@@ -81,12 +81,12 @@ bot.on("message", (message) => {
     if(message.content.startsWith(config.prefix + "prefixset")) {
         if(message.author.id !== config.ownerID) {
             return message.channel.send("You don't have the permissions to do that"),
-            console.log("'PrefixSet' was executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ") but failed to complete");
+            console.log("'PrefixSet' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
         }
         config.prefix = message.content.split(" ").slice(1, 2)[0];
         fs.writeFile("./config/config.json", JSON.stringify(config), (err) => console.error);
             message.channel.send("Prefix set to `" + (config.prefix) + "`");
-            console.log("'PrefixSet' was executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
+            console.log("'PrefixSet' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
     }
 
 //purge command
@@ -100,7 +100,7 @@ bot.on("message", (message) => {
         let modRole = message.guild.roles.find("name", "mod");
         if(modRole && !message.member.roles.has(modRole.id)) {
             message.channel.send("You don't have the permissions to do that")
-            console.log("'Purge' was executed in the guild " + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ") but failed to complete");
+            console.log("'Purge' was executed in the guild " + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
 			return;
         }
 
@@ -114,7 +114,7 @@ bot.on("message", (message) => {
                 messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
             }
             message.channel.bulkDelete(messages).catch(error => message.channel.send(error.stack));
-            console.log("'Purge' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + "). They have deleted " + amount + " messages");
+            console.log("'Purge' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They have deleted " + amount + " messages");
             if (log) log.send('**' + amount + ' messages** have been deleted in <#' + message.channel.id + '>');
         }).catch(console.error);
     }
@@ -129,14 +129,14 @@ bot.on("message", (message) => {
         let staffRole = message.guild.roles.find("name", "staff");
         if(staffRole && !message.member.roles.has(staffRole.id)) {
             message.channel.send("You don't have the permissions to do that")
-            console.log("'Warn' was executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ") but failed to complete");
+            console.log("'Warn' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
 			return;
 		}
 
         if(message.mentions.users.size < 1) return message.channel.send("You must mention a user to warn");
 
         user.send("Warning: **" + reason + "**. Do not do this again");
-        console.log("'Warn' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + "). They warned " + user + " the following: " + reason);
+        console.log("'Warn' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They warned " + user + " the following: " + reason);
     }
 
     //kick command
@@ -147,17 +147,17 @@ bot.on("message", (message) => {
         let reason = args.slice(2).join(" ");
         let log = bot.channels.find("name", "logs");
         let modRole = message.guild.roles.find("name", "mod");
-        if(!message.member.roles.has(modRole.id)) {
+        if(modRole && !message.member.roles.has(modRole.id)) {
             message.channel.send("You don't have the permissions to do that")
-            console.log("'Kick' was executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ") but failed to complete");
-			return;
-		}
+            console.log("'Kick' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
+            return;
+        }
 
         if(message.mentions.users.size < 1) return message.channel.send("You must mention a user to kick");
         if(!message.guild.member(user).kickable) return message.channel.send("I can't kick someone that has a role higher than me");
         message.guild.member(user).kick(reason);
 		if (log) log.send(user + ' has been kicked from the server for **' + reason + '**');
-        console.log("'Kick' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + "). They kicked " + user + " for the following: " + reason);
+        console.log("'Kick' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They kicked " + user + " for the following: " + reason);
       }
 
       //ban command
@@ -171,7 +171,7 @@ bot.on("message", (message) => {
         let adminRole = message.guild.roles.find("name", "admin");
         if(adminRole && !message.member.roles.has(adminRole.id)) {
             message.channel.send("You don't have the permissions to do that")
-            console.log("'Ban' was executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ") but failed to complete");
+            console.log("'Ban' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
 			return;
 		}
 
@@ -179,7 +179,7 @@ bot.on("message", (message) => {
         if(!message.guild.member(user).bannable) return message.channel.send("I can't ban someone that has a role higher than me");
         message.guild.member(user).ban(reason);
 		if (log) log.send(user + ' has been banned from the server for **' + reason + '**');
-        console.log("'Ban' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + "). They banned " + user + " for the following: " + reason);
+        console.log("'Ban' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They banned " + user + " for the following: " + reason);
       }
 
       //userinfo command - unfinished (verified + joinedAt)
@@ -207,7 +207,7 @@ bot.on("message", (message) => {
         .setThumbnail(usera.avatarURL);
         message.channel.send({embed});
 
-        console.log("'UI' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
+        console.log("'UI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
     }
 
     //server info (idek why i kept this here)
@@ -242,7 +242,7 @@ bot.on("message", (message) => {
         .addField("Members (" + memberpeople + ")", "**Human:** " + humans + "\n**Bot:** " + bots + "\n**Verified:** " + membersWithRole, true);
         message.channel.send({embed});
 
-        console.log("'SI' has been executed in the guild '" + message.guild.name + "' by " + message.author.username + " (" + message.author.id + ")");
+        console.log("'SI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
     }*/
 });
 
@@ -250,7 +250,7 @@ bot.on("message", (message) => {
 
 //welcome message + log message
 bot.on('guildMemberAdd', member => {
-	let general = member.guild.channels.find("name", "general");
+	let general = member.guild.channels.find("name", "welcome");
     if (general) general.send('Welcome to **' + member.guild.name + '**, <@' + member.user.id + '>!');
 
     let log = member.guild.channels.find("name", "logs");
@@ -261,11 +261,21 @@ bot.on('guildMemberAdd', member => {
 
 //goodbye message + log message
 bot.on('guildMemberRemove', member => {
-    let general = member.guild.channels.find("name", "general")
-    if(general) general.send('Goodbye, **' + member.user.tag + '**. Thank you for being here on the server!');
-
+    let general = member.guild.channels.find("name", "general");
+    let welcome = member.guild.channels.find("name", "welcome");
+    let verifiedRole = member.guild.roles.find("name", "verified");
     let log = member.guild.channels.find("name", "logs")
-    if (log) log.send('**' + member.user.tag + '** (' + member.user.id + ') has left the guild');
+
+    if(verifiedRole && member.roles.has(verifiedRole.id)) {
+        if(general) general.send('Goodbye, **' + member.user.tag + '**. Thank you for being here on the server!');
+        if (log) log.send('**' + member.user.tag + '** (' + member.user.id + ') has left the guild');
+        return;
+    }
+    if(verifiedRole && !member.roles.has(verifiedRole.id)) {
+        if(welcome) welcome.send('Goodbye, **' + member.user.tag + '**. Thank you for being here on the server!');
+        if(log) log.send('**' + member.user.tag + '** (' + member.user.id + ') has left the guild');
+        return;
+    }
 
     console.log(member.user.tag + " (" + member.user.id + ") left " + member.guild.name);
 });
