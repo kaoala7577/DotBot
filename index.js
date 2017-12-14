@@ -212,21 +212,19 @@ bot.on("message", (message) => {
 
     //server info (idek why i kept this here)
 
-    /*if(message.content.startsWith(config.prefix + "serverinfo") || message.content.startsWith(config.prefix + "si")) {
+    if(message.content.startsWith(config.prefix + "serverinfo") || message.content.startsWith(config.prefix + "si")) {
 
         let memberpeople = message.guild.members.size;
-        let bots = 0
+        let bots = 0;
         if(message.guild.members.bot) {
             bots = bots+1
         }
-
         let humans = memberpeople - bots
-
-        let verifiedRole = message.guild.roles.find("name", "verified").size;
-        let channels = message.guild.channels.size;
-        let textCh = message.guild.textChannels.size;
-        let voiceCh = message.guild.voiceChannels.size;
-        let categori = message.guild.categories.size;
+        let verifiedRole = message.guild.roles.find("name", "verified");
+        let verified = verifiedRole.members.size
+        let textCh = 0;
+        let voiceCh = 0;
+        let categori = 0;
 
         let embed = new Discord.RichEmbed()
         .setAuthor(message.guild.name, message.guild.iconURL)
@@ -238,12 +236,12 @@ bot.on("message", (message) => {
         .addField("Owner", "<@" + message.guild.ownerID + ">", true)
         .addField("Region", message.guild.region, true)
         .addField("Created", message.guild.createdAt, true)
-        .addField("Channels )" + channels + ")", "**Text:(()) " + textCh + "\n**Voice:** " + voiceChs + "\n**Categories:** " + categori, true)
-        .addField("Members (" + memberpeople + ")", "**Human:** " + humans + "\n**Bot:** " + bots + "\n**Verified:** " + verifiedRole, true);
+        .addField("Channels (" + message.guild.channels.size + ")", "**Text:** " + textCh + "\n**Voice:** " + voiceCh + "\n**Categories:** " + categori, true)
+        .addField("Members (" + memberpeople + ")", "**Human:** " + humans + "\n**Bot:** " + bots + "\n**Verified:** " + verified, true);
         message.channel.send({embed});
 
         console.log("'SI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
-    }*/
+    }
 });
 
 //Outputs that don't have message triggers
