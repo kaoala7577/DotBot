@@ -96,7 +96,7 @@ bot.on("message", (message) => {
         let user = message.mentions.users.first();
         let amount = !!parseInt(message.content.split(' ')[1]) ? parseInt(message.content.split(' ')[1]) : parseInt(message.content.split(' ')[2]);
 		console.log(amount)
-        let log = bot.channels.find("name", "logs");
+        let log = message.guild.channels.find("name", "logs");
         let modRole = message.guild.roles.find("name", "mod");
         if(modRole && !message.member.roles.has(modRole.id)) {
             message.channel.send("You don't have the permissions to do that")
@@ -145,7 +145,7 @@ bot.on("message", (message) => {
         let args = message.content.slice(config.prefix.length).trim().split(/\s+/g);
         let user = message.mentions.members.first();
         let reason = args.slice(2).join(" ");
-        let log = bot.channels.find("name", "logs");
+        let log = message.guild.channels.find("name", "logs");
         let modRole = message.guild.roles.find("name", "mod");
         if(modRole && !message.member.roles.has(modRole.id)) {
             message.channel.send("You don't have the permissions to do that")
@@ -167,7 +167,7 @@ bot.on("message", (message) => {
         let args = message.content.slice(config.prefix.length).trim().split(/\s+/g);
         let user = message.mentions.members.first()
         let reason = args.slice(2).join(" ");
-        let log = bot.channels.find("name", "logs");
+        let log = message.guild.channels.find("name", "logs");
         let adminRole = message.guild.roles.find("name", "admin");
         if(adminRole && !message.member.roles.has(adminRole.id)) {
             message.channel.send("You don't have the permissions to do that")
@@ -215,14 +215,14 @@ bot.on("message", (message) => {
     /*if(message.content.startsWith(config.prefix + "serverinfo") || message.content.startsWith(config.prefix + "si")) {
 
         let memberpeople = message.guild.members.size;
-        let bots = 0;
+        let bots = 0
         if(message.guild.members.bot) {
-            bots + 1;
+            bots = bots+1
         }
 
         let humans = memberpeople - bots
 
-        let membersWithRole = message.guild.roles.get("389109110559473679").length;
+        let verifiedRole = message.guild.roles.find("name", "verified").size;
         let channels = message.guild.channels.size;
         let textCh = message.guild.textChannels.size;
         let voiceCh = message.guild.voiceChannels.size;
@@ -239,7 +239,7 @@ bot.on("message", (message) => {
         .addField("Region", message.guild.region, true)
         .addField("Created", message.guild.createdAt, true)
         .addField("Channels )" + channels + ")", "**Text:(()) " + textCh + "\n**Voice:** " + voiceChs + "\n**Categories:** " + categori, true)
-        .addField("Members (" + memberpeople + ")", "**Human:** " + humans + "\n**Bot:** " + bots + "\n**Verified:** " + membersWithRole, true);
+        .addField("Members (" + memberpeople + ")", "**Human:** " + humans + "\n**Bot:** " + bots + "\n**Verified:** " + verifiedRole, true);
         message.channel.send({embed});
 
         console.log("'SI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
