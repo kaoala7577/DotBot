@@ -9,9 +9,12 @@
 * Nickname change log
 * Username change log
 * Delete message log
+* Member role update log
 * Role update log
 * Mutes + timed mutes
+* Timed bans
 * Emoji log
+* Channel log (created, deleted, edited)
 
 # very low priority + easy
 
