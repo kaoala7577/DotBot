@@ -258,8 +258,8 @@ bot.on("message", (message) => {
 
 //welcome message + log message
 bot.on('guildMemberAdd', member => {
-	let general = member.guild.channels.find("name", "audit-logs");
-	let welcome = member.guild.channels.find("name", "rules-and-info") ? member.guild.channels.find("name", "rules-and-info").id : 0
+	let general = member.guild.channels.find("name", "private");
+	let welcome = member.guild.channels.find("name", "welcome-rules") ? member.guild.channels.find("name", "welcome-rules").id : 0
 	let embed = new Discord.RichEmbed()
 	.setTitle("Welcome to " + member.guild.name + "!")
 	.setThumbnail(member.displayAvatarURL)
