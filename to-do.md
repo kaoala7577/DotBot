@@ -1,6 +1,7 @@
 # high priority
 
 * ServerInfo
+* RoleInfo
 
 # low priority
 
