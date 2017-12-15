@@ -8,7 +8,7 @@ var config = require("./config/config.json");
 //startup
 
 bot.on('ready', () => {
-	console.log('Bot is up and running!');
+	console.log('Logged in as ' + bot.user.username + "#" + bot.user.discriminator);
 	bot.user.setGame(config.prefix + "help");
 });
 
@@ -188,7 +188,8 @@ bot.on("message", (message) => {
 
 		let usera = message.mentions.users.first();
 		if(!usera) return message.channel.send("Must specify user");
-		let verifiedRole = message.mentions.roles.find(val => val.name === 'verified');
+		let member = message.guild.members.find("id", usera.id);
+		let verifiedRole = member.roles.find(val => val.name === 'verified');
 		let value = verifiedRole ? "true" : "false";
 		let gameName = usera.presence.game ? usera.presence.game.name : "None";
 
@@ -198,10 +199,10 @@ bot.on("message", (message) => {
 		.addField("Username", usera.username, true)
 		.addField("Status", usera.presence.status, true)
 		.addField("Game", gameName, true)
-		.addField("Joined Server", message.mentions.users.joinedAt, true) //undefined
+		.addField("Joined Server", member.joinedAt, true)
 		.addField("Created", usera.createdAt, true)
 		.addField("Bot", usera.bot, true)
-		.addField("Verified", value, true) //always false
+		.addField("Verified", value, true)
 		.setTimestamp()
 		.setColor(0x0f7fa6)
 		.setThumbnail(usera.avatarURL);
@@ -213,7 +214,7 @@ bot.on("message", (message) => {
 	//server info (idek why i kept this here)
 
 	if(message.content.startsWith(config.prefix + "serverinfo") || message.content.startsWith(config.prefix + "si")) {
-
+		console.log(message.guild.owner.user.tag);
 		let memberCount = message.guild.members.size;
 		let bots = 0, humans = 0;
 		message.guild.members.forEach(function(mem) {
@@ -242,7 +243,7 @@ bot.on("message", (message) => {
 		.setColor(0x0f7fa6)
 		.addField("ID", message.guild.id, true)
 		.addField("Name", message.guild.name, true)
-		.addField("Owner", message.guild.owner.tag, true)
+		.addField("Owner", "<@" +message.guild.owner.id + ">", true)
 		.addField("Region", message.guild.region, true)
 		.addField("Created", message.guild.createdAt, true)
 		.addField("Channels (" + channels + ")", "**Text:** " + textCh + "\n**Voice:** " + voiceCh, true)
@@ -257,27 +258,28 @@ bot.on("message", (message) => {
 
 //welcome message + log message
 bot.on('guildMemberAdd', member => {
-	let general = member.guild.channels.find("name", "private");
-    let embed = new Discord.RichEmbed()
-    .setTitle("Welcome to " + member.guild.name + "!")
-    .setThumbnail(member.user.displayAvatarURL)
-    .setTimestamp()
-    .setFooter(member.id, member.guild.iconURL)
-    .setColor(0x0f7fa6)
-    .setDescription("Hello, <@" + member.id + ">! Please read through " + member.guild.channels.find("name", "welcome-rules") + " and inform a staff member (by using the !staff command) of your sexuality, gender and pronouns for further instruction!");
-    if(general) general.send({embed});
+	let general = member.guild.channels.find("name", "audit-logs");
+	let welcome = member.guild.channels.find("name", "rules-and-info") ? member.guild.channels.find("name", "rules-and-info").id : 0
+	let embed = new Discord.RichEmbed()
+	.setTitle("Welcome to " + member.guild.name + "!")
+	.setThumbnail(member.displayAvatarURL)
+	.setTimestamp()
+	.setFooter(member.id, member.guild.iconURL)
+	.setColor(0x0f7fa6)
+	.setDescription("Hello, " + "<@" + member.id + ">" + "! Please read through <#" + welcome + "> and inform a staff member (by using the !staff command) of your sexuality, gender and pronouns for further instruction!");
+	if(general) general.send({embed});
 
-    let log = member.guild.channels.find("name", "pirvate");
-    let embed2 = new Discord.RichEmbed()
-    .setTitle(member.username + " joined")
-    .setThumbnail(member.user.displayAvatarURL)
-    .setTimestamp()
-    .setFooter(member.id, member.guild.iconURL)
-    .setColor(0x4cbb17)
-    .setDescription("<@" + member.id + "> has joined the guild. Go welcome them!");
-    if(log) log.send({embed2});
+	let log = member.guild.channels.find("name", "private");
+	let embed2 = new Discord.RichEmbed()
+	.setTitle(member.username + " joined")
+	.setThumbnail(member.user.displayAvatarURL)
+	.setTimestamp()
+	.setFooter(member.id, member.guild.iconURL)
+	.setColor(0x4cbb17)
+	.setDescription("<@" + member.id + ">" + " has joined the guild. Go welcome them!");
+	if(log) log.send({embed2});
 
-	console.log(member.user.tag + " (" + member.user.id + ") joined " + member.guild.name);
+	console.log("<@" + member.id + ">" + " (" + member.user.id + ") joined " + member.guild.name);
 });
 
 //goodbye message + log message
@@ -288,17 +290,17 @@ bot.on('guildMemberRemove', member => {
 	let log = member.guild.channels.find("name", "logs")
 
 	if(verifiedRole && member.roles.has(verifiedRole.id)) {
-		if(general) general.send('Goodbye, **' + member.user.tag + '**. Thank you for being here on the server!');
-		if (log) log.send('**' + member.user.tag + '** (' + member.user.id + ') has left the guild');
+		if(general) general.send('Goodbye, **' + "<@" + member.id + ">" + '**. Thank you for being here on the server!');
+		if (log) log.send('**' + "<@" + member.id + ">" + '** (' + member.user.id + ') has left the guild');
 		return;
 	}
 	if(verifiedRole && !member.roles.has(verifiedRole.id)) {
-		if(welcome) welcome.send('Goodbye, **' + member.user.tag + '**. Thank you for being here on the server!');
-		if(log) log.send('**' + member.user.tag + '** (' + member.user.id + ') has left the guild');
+		if(welcome) welcome.send('Goodbye, **' + "<@" + member.id + ">" + '**. Thank you for being here on the server!');
+		if(log) log.send('**' + "<@" + member.id + ">" + '** (' + member.user.id + ') has left the guild');
 		return;
 	}
 
-	console.log(member.user.tag + " (" + member.user.id + ") left " + member.guild.name);
+	console.log("<@" + member.id + ">" + " (" + member.user.id + ") left " + member.guild.name);
 });
 
 //log message when bot is added to a new guild
