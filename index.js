@@ -182,7 +182,7 @@ bot.on("message", (message) => {
 		console.log("'Ban' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They banned " + user + " for the following: " + reason);
 	  }
 
-	  //userinfo command - unfinished (verified + joinedAt)
+	  //userinfo command
 
 	  if(message.content.startsWith(config.prefix + "userinfo") || message.content.startsWith(config.prefix + "ui")) {
 
@@ -211,7 +211,7 @@ bot.on("message", (message) => {
 		console.log("'UI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
 	}
 
-	//server info (idek why i kept this here)
+	//server info -- created with help from Mishio595
 
 	if(message.content.startsWith(config.prefix + "serverinfo") || message.content.startsWith(config.prefix + "si")) {
 		console.log(message.guild.owner.user.tag);
@@ -258,18 +258,18 @@ bot.on("message", (message) => {
 
 //welcome message + log message
 bot.on('guildMemberAdd', member => {
-	let general = member.guild.channels.find("name", "private");
+	let general = member.guild.channels.find("name", "welcome");
 	let welcome = member.guild.channels.find("name", "welcome-rules") ? member.guild.channels.find("name", "welcome-rules").id : 0
 	let embed = new Discord.RichEmbed()
 	.setTitle("Welcome to " + member.guild.name + "!")
-	.setThumbnail(member.displayAvatarURL)
+	.setThumbnail(member.user.displayAvatarURL)
 	.setTimestamp()
 	.setFooter(member.id, member.guild.iconURL)
 	.setColor(0x0f7fa6)
 	.setDescription("Hello, " + "<@" + member.id + ">" + "! Please read through <#" + welcome + "> and inform a staff member (by using the !staff command) of your sexuality, gender and pronouns for further instruction!");
 	if(general) general.send({embed});
 
-	let log = member.guild.channels.find("name", "private");
+	let log = member.guild.channels.find("name", "logs");
 	let embed2 = new Discord.RichEmbed()
 	.setTitle(member.username + " joined")
 	.setThumbnail(member.user.displayAvatarURL)
