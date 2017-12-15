@@ -248,11 +248,25 @@ bot.on("message", (message) => {
 
 //welcome message + log message
 bot.on('guildMemberAdd', member => {
-	let general = member.guild.channels.find("name", "welcome");
-    if (general) general.send('Welcome to **' + member.guild.name + '**, <@' + member.user.id + '>!');
+	let general = member.guild.channels.find("name", "private");
+    let embed = new Discord.RichEmbed()
+    .setTitle("Welcome to " + member.guild.name + "!")
+    .setThumbnail(member.user.displayAvatarURL)
+    .setTimestamp()
+    .setFooter(member.id, member.guild.iconURL)
+    .setColor(0x0f7fa6)
+    .setDescription("Hello, <@" + member.id + ">! Please read through " + member.guild.channels.find("name", "welcome-rules") + " and inform a staff member (by using the !staff command) of your sexuality, gender and pronouns for further instruction!");
+    if(general) general.send({embed});
 
-    let log = member.guild.channels.find("name", "logs");
-    if (log) log.send('**' + member.user.tag + '** (' + member.user.id + ') has joined the guild');
+    let log = member.guild.channels.find("name", "pirvate");
+    let embed2 = new Discord.RichEmbed()
+    .setTitle(member.username + " joined")
+    .setThumbnail(member.user.displayAvatarURL)
+    .setTimestamp()
+    .setFooter(member.id, member.guild.iconURL)
+    .setColor(0x4cbb17)
+    .setDescription("<@" + member.id + "> has joined the guild. Go welcome them!");
+    if(log) log.send({embed2});
 
     console.log(member.user.tag + " (" + member.user.id + ") joined " + member.guild.name);
 });
