@@ -5,6 +5,75 @@ const bot = new Discord.Client();
 const fs = require("fs");
 var config = require("./config/config.json");
 
+//helpers
+
+function checkArgs(types, vals) {
+	for (var i=0; i<types.length; i++) {
+        if (vals[i] === null) {
+            continue;
+        }
+		if (typeof types[i] === 'object') {
+			var t1 = true;
+			if (typeof vals[i] !== types[i][0]) {
+				t1 = false;
+			}
+			if (t1 === false) {
+				if (typeof vals[i] !== types[i][1]) {
+					return [false,types[i],i,typeof vals[i]];
+				}
+			}
+		} else {
+			if (typeof vals[i] !== types[i]) {
+				return [false,types[i],i,typeof vals[i]];
+			}
+		}
+	}
+	return [true,'',vals.length];
+}
+
+function makeEmbed(title, desc, color, author, footer, thumbnail, fields, timestamp) {
+    var res = checkArgs(['string', 'string', 'number', ['object', 'string'], ['object', 'string'], 'string', 'object', ['object', 'boolean']], [title, desc, color, author, footer, thumbnail, fields, timestamp]);
+    if (res[0]) {
+        var embed = new Discord.RichEmbed();
+        if (title !== null) embed.setTitle(title);
+        if (desc !== null) embed.setDescription(desc);
+        if (color !== null) embed.setColor(color);
+        if (author !== null) {
+			if (typeof author === 'string') {
+				embed.setAuthor(author);
+			} else {
+				embed.setAuthor(author[0], author[1] || undefined, author[2] || undefined);
+			}
+		}
+		if (footer !== null) {
+			if (typeof footer === 'string') {
+				embed.setFooter(footer);
+			} else {
+				embed.setFooter(footer[0], footer[1] || undefined, footer[2] || undefined);
+			}
+		}
+        if (thumbnail !== null) embed.setThumbnail(thumbnail);
+        if (fields !== null) {
+            for (var i=0; i<fields.length; i++) {
+                if (typeof fields[i][0] === 'string' && (typeof fields[i][1] === 'string') && (typeof fields[i][2] === 'boolean' || typeof fields[i][2] === 'undefined')) {
+                    embed.addField(fields[i][0], fields[i][1], fields[i][2]);
+                }
+            }
+        }
+        if (timestamp !== null) {
+			if (timestamp === true) {
+				embed.setTimestamp();
+			} else if (typeof timestamp === 'object') {
+				embed.setTimestamp(timestamp);
+			}
+		}
+        return embed;
+    } else {
+        return new Discord.RichEmbed().setDescription("Failed to make embed. Args didn't check out.\nExpected: "+res[1]+"\nIndex: "+res[2]+"\nGot: "+res[3]);
+    }
+}
+
+
 //startup
 
 bot.on('ready', () => {
@@ -41,18 +110,30 @@ bot.on("message", (message) => {
 //info command
 
 	if(message.content.startsWith(config.prefix + "info")) {
-		let embed = new Discord.RichEmbed()
-		.setAuthor("Bot Info")
-		.setDescription("DotBot is a moderation bot created specifically for the SAGA Sandwiches server! It uses the [Javascript](https://www.javascript.com/) scripting language using the [Discord.js](https://discord.js.org/#/) library")
-		.setFooter("DotBot", "https://cdn.discordapp.com/attachments/387700865642790914/388780092437823498/invert_circle.png")
-		.addField("Guilds", bot.guilds.size, true)
-		.addField("Owner", "kaoala#7577", true)
-		.addField("Support Server", "[DotBot Testing Server](https://discord.gg/qN5zj9F)", true)
-		.addField("Invite", "[Invite link](https://discordapp.com/api/oauth2/authorize?client_id=387590403114926080&permissions=8&scope=bot)", true)
-		.setTimestamp()
-		.setColor(0x0f7fa6)
-		.setThumbnail("https://cdn.discordapp.com/attachments/387700865642790914/388780092437823498/invert_circle.png");
-
+		// let embed = new Discord.RichEmbed()
+		// .setAuthor("Bot Info")
+		// .setDescription("DotBot is a moderation bot created specifically for the SAGA Sandwiches server! It uses the [Javascript](https://www.javascript.com/) scripting language using the [Discord.js](https://discord.js.org/#/) library")
+		// .setFooter("DotBot", "https://cdn.discordapp.com/attachments/387700865642790914/388780092437823498/invert_circle.png")
+		// .addField("Guilds", bot.guilds.size, true)
+		// .addField("Owner", "kaoala#7577", true)
+		// .addField("Support Server", "[DotBot Testing Server](https://discord.gg/qN5zj9F)", true)
+		// .addField("Invite", "[Invite link](https://discordapp.com/api/oauth2/authorize?client_id=387590403114926080&permissions=8&scope=bot)", true)
+		// .setTimestamp()
+		// .setColor(0x0f7fa6)
+		// .setThumbnail("https://cdn.discordapp.com/attachments/387700865642790914/388780092437823498/invert_circle.png");
+		let embed = makeEmbed(
+			null, // Title
+			"DotBot is a moderation bot created specifically for the SAGA Sandwiches server! It uses the [Javascript](https://www.javascript.com/) scripting language using the [Discord.js](https://discord.js.org/#/) library", // Description
+			0x0f7fa6, // Color
+			["Bot Info", "https://cdn.discordapp.com/attachments/387700865642790914/388780092437823498/invert_circle.png"], // Author
+			null, // Footer
+			"https://cdn.discordapp.com/attachments/387700865642790914/388780092437823498/invert_circle.png", // Thumbail
+			[["Guilds", bot.guilds.size.toString(), true], //Start Fields, field 1
+			["Owner", "kaoala#7577", true], // field 2
+			["Support Server", "[DotBot Testing Server](https://discord.gg/qN5zj9F)", true], //field 3
+			["Invite", "[Invite link](https://discordapp.com/api/oauth2/authorize?client_id=387590403114926080&permissions=8&scope=bot)", true]], // field 4
+			true
+		);
 		message.channel.send({embed});
 
 		console.log("'Info' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
