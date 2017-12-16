@@ -317,4 +317,19 @@ bot.on('guildDelete', guild => {
 	console.log('DotBot has been removed from the guild ' + guild.name);
 });
 
+//delete message log
+bot.on('messageDelete', message => {
+	let logChannel = message.guild.channels.find("name", "logs");
+	let deleteEmbed = new Discord.RichEmbed()
+	.setAuthor("Message deleted")
+	.setTimestamp()
+	.setThumbnail(message.author.displayAvatarURL)
+	.setFooter("MSGID: " + message.id, message.guild.iconURL)
+	.setDescription("**Member:** " + message.author.tag + " (" + message.author.id + ")\n**Content:** " + message.content + "\n**Channel:** <#" + message.channel.id + ">")
+	.setColor(0x0f7fa6);
+
+	logChannel.send({embed : deleteEmbed});
+	console.log("'" + message.content + "' was deleted in " + message.guild.name + " (message sent by " + message.author.tag + ")");
+});
+
 bot.login(config.token);
