@@ -289,14 +289,30 @@ bot.on('guildMemberRemove', member => {
 	let verifiedRole = member.guild.roles.find("name", "verified");
 	let log = member.guild.channels.find("name", "logs")
 
+	let goodbyeEmbed = new Discord.RichEmbed()
+	.setAuthor(member.user.tag + " has left " + member.guild.name + "!", member.user.displayAvatarURL)
+	.setTimestamp()
+	.setThumbnail(member.user.displayAvatarURL)
+	.setFooter("MID: " + member.id, member.guild.iconURL)
+	.setColor(0x0f7fa6)
+	.setDescription("Goodbye, <@" + member.id + ">! I hope you enjoyed your time on the server!");
+
+	let logEmbed = new Discord.RichEmbed()
+	.setAuthor(member.user.tag + " left", member.user.displayAvatarURL)
+	.setThumbnail(member.user.displayAvatarURL)
+	.setTimestamp()
+	.setFooter("MID: " + member.id, member.guild.iconURL)
+	.setColor(0x0f7fa6)
+	.setDescription("<@" + member.id + "> has left the guild.")
+
 	if(verifiedRole && member.roles.has(verifiedRole.id)) {
-		if(general) general.send('Goodbye, **' + "<@" + member.id + ">" + '**. Thank you for being here on the server!');
-		if (log) log.send('**' + "<@" + member.id + ">" + '** (' + member.user.id + ') has left the guild');
+		if(general) general.send({goodbyeEmbed});
+		if (log) log.send(logEmbed);
 		return;
 	}
 	if(verifiedRole && !member.roles.has(verifiedRole.id)) {
-		if(welcome) welcome.send('Goodbye, **' + "<@" + member.id + ">" + '**. Thank you for being here on the server!');
-		if(log) log.send('**' + "<@" + member.id + ">" + '** (' + member.user.id + ') has left the guild');
+		if(welcome) welcome.send(goodbyeEmbed);
+		if(log) log.send(logEmbed);
 		return;
 	}
 
