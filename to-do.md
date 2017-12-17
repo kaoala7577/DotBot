@@ -8,7 +8,6 @@
 * Unban (unsure if i'm gonna make this)
 * Nickname change log
 * Username change log
-* Delete message log
 * Member role update log
 * Role update log
 * Mutes + timed mutes
@@ -16,7 +15,7 @@
 * Emoji log
 * Channel log (created, deleted, edited)
 
-# very low priority + easy
+# very low priority
 
 * Change the help command so it isn't manual
 * Convert welcome + goodbye to embed
