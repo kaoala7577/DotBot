@@ -272,7 +272,6 @@ bot.on("message", (message) => {
 		let args = message.content.slice(config.prefix.length).trim().split(/\s+/g);
 		let user = message.mentions.members.first()
 		let reason = args.slice(2).join(" ");
-		let log = message.guild.channels.find("name", "logs");
 		let adminRole = message.guild.roles.find("name", "admin");
 		if(adminRole && !message.member.roles.has(adminRole.id)) {
 			message.channel.send("You don't have the permissions to do that")
@@ -280,21 +279,17 @@ bot.on("message", (message) => {
 			return;
 		}
 
-		let embed = makeEmbed(
-			null,
-			"**Member:** " + user.tag + " (" + user.id + ")\n**Reason:** " + reason,
-			0x0f7fa6,
-			"Member has been banned from the server",
-			["ID: " + user.id, user.displayAvatarURL],
-			user.displayAvatarURL,
-			null,
-			true
-		)
-
-		if(message.mentions.users.size < 1) return message.channel.send("You must mention a user to ban");
-		if(!message.guild.member(user).bannable) return message.channel.send("I can't ban someone that has a role higher than me");
+		if(message.mentions.users.size < 1) {
+			message.channel.send("You must mention a user to ban")
+			console.log("'Ban' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
+			return;
+		}
+		if(!message.guild.member(user).bannable) {
+			message.channel.send("I can't ban someone that has a role higher than me")
+			console.log("'Ban' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
+			return;
+		}
 		message.guild.member(user).ban(reason);
-		if (log) log.send({embed});
 		console.log("'Ban' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They banned " + user + " for the following: " + reason);
 	  }
 
@@ -512,6 +507,30 @@ bot.on('messageDelete', message => {
 		logChannel.send({embed : deleteEmbed});
 		console.log("'" + message.content + "' was deleted in " + message.guild.name + " (message sent by " + message.author.tag + ")");
 	}
+});
+
+//ban log
+bot.on('guildBanAdd', (guild, user) => {
+	guild.fetchAuditLogs({ limit: 1}).then(logs => {
+		let logArray = Array.from(logs.entries.values());
+		let entry = logArray[0];
+		let log = guild.channels.find("name", "logs");
+		entry.reason = entry.reason === null ? "None given" : entry.reason;
+		
+		let embed = makeEmbed(
+			null,
+			"**Moderator:** " + entry.executor.tag + " (" + entry.executor.id + ")\n**Member:** " + user.tag + " (" + user.id + ")\n**Reason:** " + entry.reason,
+			0x0f7fa6,
+			"Member has been banned from the server",
+			["MID: " + user.id, guild.iconURL],
+			user.displayAvatarURL,
+			null,
+			true
+		)
+		if(log) log.send(embed);
+		console.log(user.tag + " (" + user.id + ") has been banned by " + entry.executor.tag + " for " + entry.reason);
+	})
+
 });
 
 bot.login(config.token);
