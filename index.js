@@ -304,6 +304,7 @@ bot.on("message", (message) => {
 
 		let usera = message.mentions.users.first();
 		if(!usera) return message.channel.send("Must specify user");
+		if(message.mentions.users.size > 1) return message.channel.send("Please only mention one user");
 		let member = message.guild.members.find("id", usera.id);
 		let verifiedRole = member.roles.find(val => val.name === 'verified');
 		let gameName = usera.presence.game ? usera.presence.game.name : "None";
