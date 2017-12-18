@@ -463,14 +463,34 @@ bot.on('guildMemberRemove', member => {
 //log message when bot is added to a new guild
 bot.on('guildCreate', guild => {
 	let logChannel = bot.channels.get(config.logInTestGuild);
-	if (logChannel) logChannel.send("**" + bot.user.username +"** has been added to the guild **" + guild.name + "**");
+	let guildCreateEmbed = makeEmbed(
+		null,
+		bot.user.username + " has been added to the guild **" + guild.name + "**",
+		0x0f7fa6,
+		"New guild added",
+		["GID: " + guild.id, bot.user.displayAvatarURL],
+		guild.iconURL,
+		null,
+		true
+	)
+	if (logChannel) logChannel.send(guildCreateEmbed);
 	console.log(bot.user.username + " has been added to the guild " + guild.name);
 });
 
 //log message when bot is removed from a guild
 bot.on('guildDelete', guild => {
 	let logChannel = bot.channels.get(config.logInTestGuild);
-	if (logChannel) logChannel.send("**" + bot.user.username +"** has been removed from the guild **" + guild.name + "**");
+	let guildDeleteEmbed = makeEmbed(
+		null,
+		bot.user.username + " has been removed from the guild **" + guild.name + "**",
+		0x0f7fa6,
+		"Guild removed",
+		["GID: " + guild.id, bot.user.displayAvatarURL],
+		guild.iconURL,
+		null,
+		true
+	)
+	if (logChannel) logChannel.send(guildDeleteEmbed);
 	console.log(bot.user.username + " has been removed from the guild " + guild.name);
 });
 
