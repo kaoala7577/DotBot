@@ -94,7 +94,7 @@ kick
 ban
 userinfo
 serverinfo
-fill*/
+roleinfo*/
 
 //beginning
 
@@ -105,7 +105,7 @@ bot.on("message", (message) => {
 
 	if(message.content.startsWith(config.prefix + "help")) {
 		message.channel.send("I've DMed you the help page!");
-		message.author.send("```dsconfig\nHow To Read```\n`<>` = you **must** add this argument\n`[]` = this argument is **optional**\n`|` = do this **or** this (`a | b = a or b`)\n**Name:** - Description - `Example`\n\n```dsconfig\nCommands```\n**Ping:** - Shows the current ping - `" + config.prefix + "ping`\n\n**Info:** - Shows the bot info - `"  + config.prefix + "info`\n**UserInfo:** - Shows the info of a user - `" + config.prefix + "userinfo <user> | " + config.prefix + "ui <user>`\n**ServerInfo:** - Shows the info of the server - `" + config.prefix + "serverinfo | " + config.prefix + "si`\n\n**Prefix Check:** - Shows the command prefix in case you forget - `" + bot.user.tag + " prefixcheck`\n**Prefix Set:** - Sets a new prefix. Must be Bot Owner - `" + config.prefix + "prefixset <new prefix>`\n\n**Purge:** - Bulk deletes messages. Must have 'mod' role - `" + config.prefix + "purge <amount> [user]`\n**Warn:** - Warn a member about their actions. Must have 'staff' role - `" + config.prefix + "warn <user> <reason>`\n**Kick:** - Kicks a user. Must have 'mod' role - `" + config.prefix + "kick <user> [reason]`\n**Ban:** - Bans a member. Must have 'admin' role - `" + config.prefix + "ban <user> [reason]`");
+		message.author.send("```dsconfig\nHow To Read```\n`<>` = you **must** add this argument\n`[]` = this argument is **optional**\n`|` = do this **or** this (`a | b = a or b`)\n**Name:** - Description - `Example`\n\n```dsconfig\nCommands```\n**Ping:** - Shows the current ping - `" + config.prefix + "ping`\n\n**Info:** - Shows the bot info - `"  + config.prefix + "info`\n**UserInfo:** - Shows the info of a user - `" + config.prefix + "userinfo <user> | " + config.prefix + "ui <user>`\n**ServerInfo:** - Shows the info of the server - `" + config.prefix + "serverinfo | " + config.prefix + "si`\n**RoleInfo:** - Shows info of a role - `" + config.prefix + "roleinfo | " + config.prefix + "si`\n\n**PrefixCheck:** - Shows the command prefix in case you forget - `" + bot.user.tag + " prefixcheck`\n**PrefixSet:** - Sets a new prefix. Must be Bot Owner - `" + config.prefix + "prefixset <new prefix>`\n\n**Purge:** - Bulk deletes messages. Must have 'mod' role - `" + config.prefix + "purge <amount> [user]`\n**Warn:** - Warn a member about their actions. Must have 'staff' role - `" + config.prefix + "warn <user> <reason>`\n**Kick:** - Kicks a user. Must have 'mod' role - `" + config.prefix + "kick <user> [reason]`\n**Ban:** - Bans a member. Must have 'admin' role - `" + config.prefix + "ban <user> [reason]`");
 		console.log("'Help' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
 			//make sure to edit this when you add a new command
 	}
