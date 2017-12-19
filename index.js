@@ -375,6 +375,43 @@ bot.on("message", (message) => {
 
 		console.log("'SI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
 	}
+	
+	//RoleInfo
+
+	if(message.content.startsWith(config.prefix + "roleinfo") || message.content.startsWith(config.prefix + "ri")) {
+		let args = message.content.slice(config.prefix.length).trim().split(/\s+/g);
+		let role = args.slice(1).join(" ");
+		let roleMention = message.guild.roles.find(val => val.name.toLowerCase() === role.toLowerCase());
+
+		if(roleMention === null) return message.channel.send("Please mention a valid role");
+
+		let colour = roleMention.hexColor.substring(1)
+		let count = 0
+		message.guild.members.forEach(function(mem) {
+			if (mem.roles.get(roleMention.id)) {
+				count += 1;
+			}
+		});
+
+		let embed = makeEmbed(
+			null,
+			null,
+			roleMention.color,
+			[message.guild.name, message.guild.iconURL],
+			null,
+			"http://www.colorhexa.com/" + colour + ".png",
+			[["Name", roleMention.name, true],
+			["ID", roleMention.id, true],
+			["Hex", roleMention.hexColor, true],
+			["Position", roleMention.calculatedPosition.toString(), true],
+			["Created", roleMention.createdAt, true],
+			["Members", count, true]],
+			true
+		)
+
+		message.channel.send(embed);
+		console.log("'RI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") for the role '" + roleMention.name + "'");
+	}
 });
 
 //Outputs that don't have message triggers
