@@ -1,5 +1,6 @@
 # high priority
 
+* Change everything to be configurable (welcome, goodbye, channels, roles, etc) **(MAIN PRIORITY)**
 * Channel log (created, deleted, edited)
 * Nickname change log
 * Username change log
