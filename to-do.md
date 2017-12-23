@@ -7,12 +7,13 @@
 
 # low priority
 
-* Unban (unsure if i'm gonna make this)
+* Unban
 * Member role update log
 * Role update log
 * Mutes + timed mutes
 * Timed bans
 * Emoji log
+* Emoji info
 
 # very low priority
 
