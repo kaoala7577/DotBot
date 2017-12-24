@@ -119,7 +119,7 @@ bot.on("message", (message, args) => {
 			[["Info Commands", "**Info:** - Shows the bot info `(Everyone)`\n`"  + config.prefix + "info`\n**UserInfo:** - Shows the info of a user `(Everyone)`\n`" + config.prefix + "userinfo <user> | " + config.prefix + "ui <user>`\n**ServerInfo:** - Shows the info of the server `(Everyone)`\n`" + config.prefix + "serverinfo | " + config.prefix + "si`\n**RoleInfo:** - Shows info of a role `(Everyone)`\n`" + config.prefix + "roleinfo <role> | " + config.prefix + "ri <role>`\n**EmojiInfo:** - Shows info of a custom emoji `(Everyone)`\n`" + config.prefix + "emojiinfo <emoji name> | " + config.prefix + "ei <emoji name>`", false],
 			["Prefix Commands", "**PrefixCheck:** - Shows the command prefix in case you forget `(Everyone)`\n`@" + bot.user.tag + " prefixcheck`\n**PrefixSetAll:** - Sets a new prefix `(Bot Owner)`\n`" + config.prefix + "prefixset <new prefix>`", false],
 			["Moderating Commands", "**Purge:** - Bulk deletes messages `(Mod)`\n`" + config.prefix + "purge <amount> [user]`\n**Warn:** - Warn a member about their actions `(Staff)`\n`" + config.prefix + "warn <user> <reason>`\n**Kick:** - Kicks a user `(Mod)`\n`" + config.prefix + "kick <user> [reason]`\n**Ban:** - Bans a member `(Admin)`\n`" + config.prefix + "ban <user> [reason]`", false],
-			["Misc Commands", "**Ping:** - Shows the current bot response time `(Everyone)`\n`" + config.prefix + "ping`\n**Game:** - Sets the bot's game `(Bot Owner)`\n`" + config.prefix + "game <game>`\n**Nickname:** - Sets the bot's nickname `(Bot Owner)`\n`" + config.prefix + "nick <name> | " + config.prefix + "nickname <name>`\n**Fill:** - Spams the channel (for testing purge and delete log) `(Bot Owner)`\n`" + config.prefix + "fill`"], false],
+			["Misc Commands", "**Ping:** - Shows the current bot response time `(Everyone)`\n`" + config.prefix + "ping`\n**Game:** - Sets the bot's game `(Bot Owner)`\n`" + config.prefix + "game <game>`\n**Nickname:** - Sets the bot's nickname `(Bot Owner)`\n`" + config.prefix + "nick <name> | " + config.prefix + "nickname <name>`\n**Guilds:** - Shows all guilds the bot is in `(Bot Owner)`\n`" + config.prefix + "guilds`\n**Fill:** - Spams the channel (for testing purge and delete log) `(Bot Owner)`\n`" + config.prefix + "fill`"], false],
 			true
 		  )
 		message.channel.send("I've DMed you the help page!");
@@ -492,6 +492,14 @@ bot.on("message", (message, args) => {
 		}
 		message.channel.send("Nickname has been set to `" + name + "`");
 		console.log("'Nick' has been executed in the guild '" + message.guild.name + "'. Nickname was set to '" + name + "'");
+	}
+	
+	//guilds
+
+	if(message.content.startsWith(config.prefix + "guilds")) {
+		if(!message.author.id == config.ownerID) return message.channel.send("Bot owner only");
+		message.channel.send("```markdown\n# " + bot.guilds.size + " guilds\n" + bot.guilds.map(g => g.name + " (" + g.id + ")").join("\n") + "```");
+		console.log("'Guilds' has been executed in the guild '" + message.guild.name + "'");
 	}
 
 	//fill - to test the purge command - bot owner only - why the fuck am i doing this
