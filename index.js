@@ -116,7 +116,7 @@ bot.on("message", (message, args) => {
 			["Help Page", bot.user.avatarURL],
 			null,
 			bot.user.avatarURL,
-			[["Info Commands", "**Info:** - Shows the bot info `(Everyone)`\n`"  + config.prefix + "info`\n**UserInfo:** - Shows the info of a user `(Everyone)`\n`" + config.prefix + "userinfo <user> | " + config.prefix + "ui <user>`\n**ServerInfo:** - Shows the info of the server `(Everyone)`\n`" + config.prefix + "serverinfo | " + config.prefix + "si`\n**RoleInfo:** - Shows info of a role `(Everyone)`\n`" + config.prefix + "roleinfo <role> | " + config.prefix + "ri <role>`", false],
+			[["Info Commands", "**Info:** - Shows the bot info `(Everyone)`\n`"  + config.prefix + "info`\n**UserInfo:** - Shows the info of a user `(Everyone)`\n`" + config.prefix + "userinfo <user> | " + config.prefix + "ui <user>`\n**ServerInfo:** - Shows the info of the server `(Everyone)`\n`" + config.prefix + "serverinfo | " + config.prefix + "si`\n**RoleInfo:** - Shows info of a role `(Everyone)`\n`" + config.prefix + "roleinfo <role> | " + config.prefix + "ri <role>`\n**EmojiInfo:** - Shows info of a custom emoji `(Everyone)`\n`" + config.prefix + "emojiinfo <emoji name> | " + config.prefix + "ei <emoji name>`", false],
 			["Prefix Commands", "**PrefixCheck:** - Shows the command prefix in case you forget `(Everyone)`\n`@" + bot.user.tag + " prefixcheck`\n**PrefixSetAll:** - Sets a new prefix `(Bot Owner)`\n`" + config.prefix + "prefixset <new prefix>`", false],
 			["Moderating Commands", "**Purge:** - Bulk deletes messages `(Mod)`\n`" + config.prefix + "purge <amount> [user]`\n**Warn:** - Warn a member about their actions `(Staff)`\n`" + config.prefix + "warn <user> <reason>`\n**Kick:** - Kicks a user `(Mod)`\n`" + config.prefix + "kick <user> [reason]`\n**Ban:** - Bans a member `(Admin)`\n`" + config.prefix + "ban <user> [reason]`", false],
 			["Misc Commands", "**Ping:** - Shows the current bot response time `(Everyone)`\n`" + config.prefix + "ping`\n**Game:** - Sets the bot's game `(Bot Owner)`\n`" + config.prefix + "game <game>`\n**Nickname:** - Sets the bot's nickname `(Bot Owner)`\n`" + config.prefix + "nick <name> | " + config.prefix + "nickname <name>`\n**Fill:** - Spams the channel (for testing purge and delete log) `(Bot Owner)`\n`" + config.prefix + "fill`"], false],
@@ -272,6 +272,39 @@ bot.on("message", (message, args) => {
 		console.log("'RI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") for the role '" + roleMention.name + "'");
 	}
 
+	//emoji info
+
+	if(message.content.startsWith(config.prefix + "emojiinfo") || message.content.startsWith(config.prefix + "ei")) {
+		let args = message.content.slice(config.prefix.length).trim().split(/\s+/g);
+		let emoji = args.slice(1).join(" ");
+		let emojiMention = message.guild.emojis.find("name", emoji);
+		message.guild.fetchAuditLogs({type: 60}, {target: emojiMention}).then(logs => {
+			let logArray = Array.from(logs.entries.values());
+			let entry = logArray[0];
+		
+
+			if(emojiMention === null) return message.channel.send("Please mention a valid emoji");
+
+			let embed = makeEmbed(
+				null,
+				null,
+				0x0f7fa6,
+				["Emoji", emojiMention.url],
+				null,
+				emojiMention.url,
+				[["Name", emojiMention.name, true],
+				["ID", emojiMention.id, true],
+				["User", entry.executor.tag, true],
+				["Created", emojiMention.createdAt, true]],
+				true
+			)
+
+			message.channel.send(embed);
+			console.log("'EI' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") for the emoji '" + emojiMention.name + "'");
+		})
+	}
+
+
 //prefix
 
 	//prefix check command
@@ -423,45 +456,6 @@ bot.on("message", (message, args) => {
 		message.guild.member(user).ban(reason);
 		console.log("'Ban' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They banned " + user + " for the following: " + reason);
 	  }
-
-	  //unban
-
-	  /*if(message.content.startsWith(config.prefix + "unban")) {
-
-		let reason = args.slice(1).join(' ');
-		reason = reason === "" ? "None given" : reason;
-		let user = args[0];
-		let adminRole = message.guild.roles.find("name", "admin");
-		if(adminRole && !message.member.roles.has(adminRole.id)) {
-			message.channel.send("You don't have the permissions to do that");
-			console.log("'Ban' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
-			return;
-		}
-		if(message.user.size < 1) {
-			message.channel.send("You must mention a user to unban");
-			console.log("'Unban' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
-			return;
-		}
-		message.guild.unban(user);
-		console.log("'Ban' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They banned " + user + " for the following: " + reason);
-	}*/
-
-		/*let args = message.content.slice(config.prefix.length).trim().split(/\s+/g);
-		let user = message.mentions.members.first()
-		let adminRole = message.guild.roles.find("name", "admin");
-		if(adminRole && !message.member.roles.has(adminRole.id)) {
-			message.channel.send("You don't have the permissions to do that");
-			console.log("'Ban' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
-			return;
-		}
-		if(message.mentions.users.size < 1) {
-			message.channel.send("You must mention a user to unban");
-			console.log("'Unban' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
-			return;
-		}
-		message.guild.unban.user;
-		console.log("'Ban' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They banned " + user + " for the following: " + reason);
-	  }*/
 
 //misc
 
@@ -735,7 +729,6 @@ bot.on('guildBanAdd', (guild, user) => {
 		if(log) log.send(embed);
 		console.log(user.tag + " (" + user.id + ") has been banned by " + entry.executor.tag + " for " + entry.reason);
 	})
-
 });
 
 bot.login(config.token);
