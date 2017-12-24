@@ -13,8 +13,3 @@
 * Mutes + timed mutes
 * Timed bans
 * Emoji log
-* Emoji info
-
-# very low priority
-
-* Change the help command so it isn't manual
