@@ -142,7 +142,7 @@ bot.on("message", (message, args) => {
 			"https://cdn.discordapp.com/attachments/387700865642790914/388780092437823498/invert_circle.png", // Thumbail
 			[["Guilds", bot.guilds.size, true], //Start Fields, field 1
 			["Owner", config.ownerTag, true], // field 2
-			["Support Server", "[DotBot Testing Server](https://discord.gg/qN5zj9F)", true], //field 3
+			["Support Server", "[DotBot Testing Server](https://discord.gg/cBR9rHg)", true], //field 3
 			["Invite", "[Invite link](https://discordapp.com/api/oauth2/authorize?client_id=387590403114926080&permissions=8&scope=bot)", true]],
 			true
 		);
