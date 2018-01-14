@@ -266,7 +266,6 @@ bot.on("message", (message, args) => {
 			let logArray = Array.from(logs.entries.values());
 			let entry = logArray[0];
 
-
 			if(emojiMention === null) return message.channel.send("Please mention a valid emoji");
 
 			let embed = makeEmbed(
