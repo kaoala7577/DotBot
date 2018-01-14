@@ -1,9 +1,12 @@
-//this shit
+//this stuff
 
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const fs = require("fs");
 var config = require("./config/config.json");
+
+bot.on("error", (e) => console.error(e));
+bot.on("warn", (e) => console.warn(e));
 
 //embed helper function - courtesy of Adelyn (love u so much)
 
@@ -30,7 +33,7 @@ function checkArgs(types, vals) {
 	}
 	return [true,'',vals.length];
 }
-	
+
 function makeEmbed(title, desc, color, author, footer, thumbnail, fields, timestamp) {
 	var res = checkArgs(['string', 'string', 'number', ['object', 'string'], ['object', 'string'], 'string', 'object', ['object', 'boolean']], [title, desc, color, author, footer, thumbnail, fields, timestamp]);
 	if (res[0]) {
@@ -80,25 +83,6 @@ bot.on('ready', () => {
 	var content = config.prefix + "help";
 	bot.user.setGame(content);
 });
-
-/*all commands:
-	game
-	nickname
-	help
-	info
-	ping
-	prefixcheck
-	prefixset
-	purge
-	warn
-	kick
-	ban
-	userinfo
-	serverinfo
-	roleinfo
-	scrom
-	fill
-	(not in that order)*/
 
 //beginning
 
@@ -281,7 +265,7 @@ bot.on("message", (message, args) => {
 		message.guild.fetchAuditLogs({type: 60}, {target: emojiMention}).then(logs => {
 			let logArray = Array.from(logs.entries.values());
 			let entry = logArray[0];
-		
+
 
 			if(emojiMention === null) return message.channel.send("Please mention a valid emoji");
 
@@ -313,7 +297,7 @@ bot.on("message", (message, args) => {
 		message.channel.send("The prefix is `" + (config.prefix) + "`. If you have the correct permissions and you would like to change it, do `" + config.prefix + "prefixset <new prefix>`");
 		console.log("'Prefixcheck' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
 	}
-	
+
 	//prefix set all command, courtesy of Adelyn
 
 	if(message.content.startsWith(config.prefix + "prefixset")) {
@@ -321,8 +305,8 @@ bot.on("message", (message, args) => {
 		console.log("'PrefixSet' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
 		config.prefix = message.content.split(" ").slice(1, 2)[0];
 		fs.writeFile("./config/config.json", JSON.stringify(config), (err) => console.error);
-			message.channel.send("Prefix set to `" + (config.prefix) + "`");
-			console.log("'PrefixSet' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
+		message.channel.send("Prefix set to `" + (config.prefix) + "`");
+		console.log("'PrefixSet' was executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
 	}
 
 //moderation
@@ -468,6 +452,18 @@ bot.on("message", (message, args) => {
 		});
 	}
 
+	//uptime command
+
+	if(message.content.startsWith(config.prefix + "uptime")) {
+		function millisToMinutesAndSeconds(millis) {
+			let minutes = Math.floor(millis / 60000);
+			let seconds = ((millis % 60000) / 1000).toFixed(0);
+			return minutes + "m" + (seconds < 10 ? '0' : '') + seconds + "s";
+		}
+		message.channel.send("Uptime is `" + bot.uptime + "ms` or `" + millisToMinutesAndSeconds(bot.uptime) + "`");
+		console.log("'Uptime' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ")");
+	}
+
 	//game
 
 	if(message.content.startsWith(config.prefix + "game ")) {
@@ -493,7 +489,7 @@ bot.on("message", (message, args) => {
 		message.channel.send("Nickname has been set to `" + name + "`");
 		console.log("'Nick' has been executed in the guild '" + message.guild.name + "'. Nickname was set to '" + name + "'");
 	}
-	
+
 	//guilds
 
 	if(message.content.startsWith(config.prefix + "guilds")) {
@@ -541,37 +537,17 @@ bot.on("message", (message, args) => {
 		console.log("'Scream' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They said '" + content + "'");
 	}
 
-//config
+        //emit
 
-	//welcome
-
-	if(message.content.startsWith(config.prefix + "config welcome ")) {
-		let adminRole = message.guild.roles.find("name", "admin");
-		if(message.member.roles.has(adminRole.id)) {
-			let newMessage = message.content.split(" welcome ").slice(1, 2)[0];
-			config.Jmessage = newMessage;
-			fs.writeFile("./config.json", JSON.stringify(config), (err) => console.error);
-			message.channel.send("Welcome message has been set to `" + config.Jmessage + "`");
-			//config.Jmessage = config.Jmessage.replace(/{user}/g, "<@" + message.member.user.id + ">").replace(/{guild}/g, message.guild.name);
-			const replaceJMessage = config.Jmessage.replace("{user}", "<@" + message.member.user.id + ">").replace("{guild}", message.guild.name);
-			config.Jmessage = replaceJMessage;
-			//settings.welcomeMessage.replace("{{user}}", member.user.tag);
-		}
-	}
-
-	//goodbye
-
-	if(message.content.startsWith(config.prefix + "config goodbye ")) {
-		let adminRole = message.guild.roles.find("name", "admin");
-		if(message.member.roles.has(adminRole.id)) {
-			let newMessage = message.content.split(" goodbye ").slice(1, 2)[0];
-			config.Gmessage = newMessage;
-			fs.writeFile("./config.json", JSON.stringify(config), (err) => console.error);
-			message.channel.send("Goodbye message has been set to `" + config.Gmessage + "`");
-			//config.Jmessage = config.Jmessage.replace(/{user}/g, "<@" + message.member.user.id + ">").replace(/{guild}/g, message.guild.name);
-			const replaceGMessage = config.Gmessage.replace("{user}", "<@" + message.member.user.id + ">").replace("{guild}", message.guild.name);
-			config.Gmessage = replaceGMessage;
-			//settings.welcomeMessage.replace("{{user}}", member.user.tag);
+	if(message.author.id !== config.ownerID) return;
+	var args = message.content.slice(config.prefix.length).trim().split(/\s+/g);
+	var type = args.slice(1).join(" ");
+	if(message.content.startsWith(config.prefix + "emit")) {
+		if(type === "welcome") {
+			bot.emit("guildMemberAdd", message.member);
+		} else
+		if(type === "goodbye") {
+			bot.emit("guildMemberRemove", message.member);
 		}
 	}
 });
@@ -591,7 +567,7 @@ bot.on('guildMemberAdd', member => {
 		0x0f7fa6,
 		[member.user.tag + " has joined " + member.guild.name + "!", member.user.displayAvatarURL],
 		["MID: " + member.id, member.guild.iconURL],
-		member.user.displayAvatarURL,
+		member.user.avatarURL,
 		null,
 		true
 	)
@@ -602,7 +578,7 @@ bot.on('guildMemberAdd', member => {
 		0x0f7fa6,
 		[member.user.tag + " joined", member.user.displayAvatarURL],
 		["MID: " + member.id, member.guild.iconURL],
-		member.user.displayAvatarURL,
+		member.user.avatarURL,
 		null,
 		true
 	)
@@ -627,7 +603,7 @@ bot.on('guildMemberRemove', member => {
 		0x0f7fa6,
 		[member.user.tag + " left", member.user.displayAvatarURL],
 		["MID: " + member.id, member.guild.iconURL],
-		member.user.displayAvatarURL,
+		member.user.avatarURL,
 		null,
 		true
 	)
@@ -637,7 +613,7 @@ bot.on('guildMemberRemove', member => {
 		0x0f7fa6,
 		[member.user.tag + " left", member.user.displayAvatarURL],
 		["MID: " + member.id, member.guild.iconURL],
-		member.user.displayAvatarURL,
+		member.user.avatarURL,
 		null,
 		true
 	)
@@ -704,13 +680,13 @@ bot.on('messageDelete', message => {
 		0x0f7fa6,
 		"Message deleted",
 		["MSGID: " + message.id, message.guild.iconURL],
-		message.author.displayAvatarURL,
+		message.author.avatarURL,
 		null,
 		true
 	)
 
 	if(message) {
-		logChannel.send({embed : deleteEmbed});
+		if(logChannel) logChannel.send({embed : deleteEmbed});
 		console.log("'" + message.content + "' was deleted in " + message.guild.name + " (message sent by " + message.author.tag + ")");
 	}
 });
@@ -723,14 +699,14 @@ bot.on('guildBanAdd', (guild, user) => {
 		let entry = logArray[0];
 		let log = guild.channels.find("name", "logs");
 		entry.reason = entry.reason === null ? "None given" : entry.reason;
-		
+
 		let embed = makeEmbed(
 			null,
 			"**Moderator:** " + entry.executor.tag + " (" + entry.executor.id + ")\n**Member:** " + user.tag + " (" + user.id + ")\n**Reason:** " + entry.reason,
 			0x0f7fa6,
 			"Member has been banned from the server",
 			["MID: " + user.id, guild.iconURL],
-			user.displayAvatarURL,
+			user.avatarURL,
 			null,
 			true
 		)
