@@ -314,38 +314,39 @@ bot.on("message", (message, args) => {
 
 	if(message.content.startsWith(config.prefix + "purge")) {
 
-	let user = message.mentions.users.first();
-	let amount = !!parseInt(message.content.split(' ')[1]) ? parseInt(message.content.split(' ')[1]) : parseInt(message.content.split(' ')[2]);
-	let log = message.guild.channels.find("name", "logs");
-	let modRole = message.guild.roles.find("name", "mod");
-	if(modRole && !message.member.roles.has(modRole.id)) {
-		message.channel.send("Mods only")
-		console.log("'Purge' was executed in the guild " + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
-	} return;
-	let embed = makeEmbed(
-		null,
-		"**Moderator: **" + message.author.tag + " (" + message.author.id + ")\n**Amount:** " + amount + "\n**Channel: ** <#" + message.channel.id + ">",
-		0x0f7fa6,
-		"Messages have been purged",
-		["MID: " + message.author.id, message.guild.iconURL],
-		message.author.avatarURL,
-		null,
-		true
-	);
+		let user = message.mentions.users.first();
+		let amount = !!parseInt(message.content.split(' ')[1]) ? parseInt(message.content.split(' ')[1]) : parseInt(message.content.split(' ')[2]);
+		let log = message.guild.channels.find("name", "logs");
+		let modRole = message.guild.roles.find("name", "mod");
+		if(modRole && !message.member.roles.has(modRole.id)) {
+			message.channel.send("Mods only")
+			console.log("'Purge' was executed in the guild " + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + ") but failed to complete");
+		} return;
+		let embed = makeEmbed(
+			null,
+			"**Moderator: **" + message.author.tag + " (" + message.author.id + ")\n**Amount:** " + amount + "\n**Channel: ** <#" + message.channel.id + ">",
+			0x0f7fa6,
+			"Messages have been purged",
+			["MID: " + message.author.id, message.guild.iconURL],
+			message.author.avatarURL,
+			null,
+			true
+		);
 
-	if (isNaN(amount)) return message.channel.send('Must specify a valid amount to delete!');
-	if (!amount && !user) return;
-	message.channel.fetchMessages({
-		limit: amount + 1,
-	}).then((messages) => {
-		if (user) {
-			let filterBy = user ? user.id : bot.user.id;
-			messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
-		}
-		message.channel.bulkDelete(messages).catch(error => message.channel.send(error.stack));
-		console.log("'Purge' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They have deleted " + amount + " messages");
-		if (log) log.send({embed});
-	}).catch(console.error);
+		if (isNaN(amount)) return message.channel.send('Must specify a valid amount to delete!');
+		if (!amount && !user) return;
+		message.channel.fetchMessages({
+			limit: amount + 1,
+		}).then((messages) => {
+			if (user) {
+				let filterBy = user ? user.id : bot.user.id;
+				messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
+			}
+			message.channel.bulkDelete(messages).catch(error => message.channel.send(error.stack));
+			console.log("'Purge' has been executed in the guild '" + message.guild.name + "' by " + message.author.tag + " (" + message.author.id + "). They have deleted " + amount + " messages");
+			if (log) log.send({embed});
+		}).catch(console.error);
+	}
 
 	//warn command
 
