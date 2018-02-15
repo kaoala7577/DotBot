@@ -5,6 +5,8 @@
 * Mutes?
 * Emoji log
 * Maybe rainbow role feature?
+* Kick log
+* Kick + ban reason message
 
 # 2.0 additions (when functions, database and host are set up)
 
